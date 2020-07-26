@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from "react";
 import TeamItem from "./components/TeamItem";
+import {useDispatch, useSelector} from "react-redux";
+import {setTeamItem, toggleTeamItem} from "./redux/team_items/actions";
 
 /*
   {
@@ -29,7 +31,14 @@ const createTeamItem = (name) => {
 
 const TeamApp = () => {
   const [newTeamName, setNewTeamName] = useState("");
-  const [teamItems, setTeamItems] = useState([]);
+  //const [teamItems, setTeamItems] = useState([]);
+
+  const teamItems = useSelector((state) => state.todoItems.byId);
+  const dispatch = useDispatch();
+
+  const handleCreateTeam = () => {
+    dispatch(setTodoItem(createTodoItem(newTodoName)));
+  };
 
   useEffect(() => {
     if (teamItems.length > 0) {
@@ -47,21 +56,8 @@ const TeamApp = () => {
   };
 
   const handleToggleChecked = (id) => {
-    const updatedTeamItems = teamItems.map((item) => {
-      if (item.id !== id) {
-        return item;
-      }
-
-      return {
-        ...item,
-        checked: !item.checked,
-      };
-    });
-
-    setTeamItems(updatedTeamItems);
+    dispatch(toggleTeamItem(id));
   };
-
-  console.log(teamItems);
 
   return [
     <div 
